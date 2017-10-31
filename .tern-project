@@ -1,6 +1,8 @@
 {
   "ecmaVersion": 6,
-  "libs": [],
+  "libs": [
+    "jquery"
+  ],
   "loadEagerly": [],
   "dontLoad": [
     "node_modules/**"
@@ -10,6 +12,16 @@
       "dontLoad": "",
       "load": "",
       "modules": ""
-    }
+    },
+    "complete_strings": {
+      "maxLength": 15
+    },
+    "es_modules": {},
+    "requirejs": {
+      "baseURL": "",
+      "paths": "",
+      "override": ""
+    },
+    "commonjs": {}
   }
 }
