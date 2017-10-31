@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import logo from '../img/logo.png';
 import '../style/Board.scss';
 
 export default class Board extends Component {
@@ -28,12 +28,14 @@ export default class Board extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
+    // const logo = new Image();
+    // logo.src = '../img/logo.png';
+    // console.log(logo);
     this.drawChessBoard();
   }
 
   componentDidUpdate() {
-    console.log(this.state.chessBoard);
+    // console.log(this.state.chessBoard);
     this.win();
     // console.log(this.state);
     // const { chessBoard } = this.state;
@@ -99,7 +101,8 @@ export default class Board extends Component {
 
   // 用户下棋
   onClick(e) {
-    e.persist();
+    // e.persist();
+    // console.log(e)
     // const e = ev || window.event;
     const { over, me, chessBoard } = this.state;
     const { nativeEvent } = e;
@@ -138,9 +141,10 @@ export default class Board extends Component {
       }
     }
   }
+
   render() {
     return (
-      <canvas id='chessboard' width='450' height='450' ref={canvas => { this._canvas = canvas; }} onClick={this.onClick}></canvas>
+      <canvas id='chessboard' style={{'background': `url(${logo}) center`}} width='450' height='450' ref={canvas => { this._canvas = canvas; } } onClick={this.onClick}></canvas>
     );
   }
 }
