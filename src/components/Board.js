@@ -15,7 +15,6 @@ export default class Board extends Component {
 
   componentWillMount() {
     const chessBoard = [];
-
     for (let i = 0; i < 15;i++) {
       chessBoard[i] = [];
       for (let j = 0; j < 15; j++) {
@@ -35,33 +34,7 @@ export default class Board extends Component {
   }
 
   componentDidUpdate() {
-    // console.log(this.state.chessBoard);
     this.win();
-    // console.log(this.state);
-    // const { chessBoard } = this.state;
-    // const whiteWinArray = [];
-    // const blackWinArray = [];
-    // for (let i = 0; i < 15; i++) {
-    //   for (let j = 0; j < 15; j++) {
-    //     if (chessBoard[i][j] === 1 && chessBoard[i][j + 1] === 1) {
-    //       blackWinArray.push(1);
-    //     } else if (chessBoard[i][j] === 2 && chessBoard[i][j + 1] === 2) {
-    //       whiteWinArray.push(2);
-    //     }
-    //     // } else if (whiteWinArray.length === 5 || blackWinArray.length === 5) {
-    //     //   alert('游戏结束');
-    //     // }
-    //     // console.log(whiteWinArray, blackWinArray);
-    //     // else if (chessBoard[i][j] === 2) {
-    //     //   blackWinArray.push(2);
-    //     // } else if (whiteWinArray.length === 5 || blackWinArray.length === 5) {
-    //     //   // this.setState({
-    //     //   //   over:
-    //     //   // }, () => { console.log('游戏结束'); });
-    //     // }
-    //   }
-    // }
-    // console.log(whiteWinArray, blackWinArray);
   }
 
   // 画个棋盘
@@ -101,17 +74,11 @@ export default class Board extends Component {
 
   // 用户下棋
   onClick(e) {
-    // e.persist();
-    // console.log(e)
-    // const e = ev || window.event;
     const { over, me, chessBoard } = this.state;
     const { nativeEvent } = e;
     if (over === true) {
       return;
     }
-    // if (me === false) {
-    //   return;
-    // }
     const x = nativeEvent.offsetX;
     const y = nativeEvent.offsetY;
     const i = Math.floor(x / 30);
