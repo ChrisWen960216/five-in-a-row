@@ -1,4 +1,5 @@
-
+// var socket = io();
+console.log(io());
 // 造棋盘
 const chessBoard = [];
 let me = true;
