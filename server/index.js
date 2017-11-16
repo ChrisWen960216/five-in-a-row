@@ -11,7 +11,10 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-  console.log('a user connected');
+  socket.on('ChessBoard', function(syncState) {
+    io.emit('ChessBoard', syncState);
+    console.log('alreadySendState', syncState.me);
+  });
 });
 
 http.listen(3000, function() {
