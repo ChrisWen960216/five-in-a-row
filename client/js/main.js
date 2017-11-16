@@ -1,5 +1,6 @@
 // 引入socket全局变量
 const socket = io();
+const wait = document.getElementById('wait');
 let chessBoard = [];
 let me;
 
@@ -70,7 +71,7 @@ const oneStep = function (i, j, me) {
   context.fill();// 填充
 };
 // 下棋
-chess.onclick = function (e) {
+const play = function (e) {
   const x = e.offsetX;
   const y = e.offsetY;
   const i = Math.floor(x / 30);
@@ -82,7 +83,10 @@ chess.onclick = function (e) {
       chessBoard: chessBoard
     };
     socket.emit('ChessBoard', syncState);
+    wait.style.display = 'block';
   } else {
     alert('这里不能下...');
   }
 };
+
+chess.addEventListener('click', e => { play(e); });
