@@ -20,6 +20,9 @@ io.on('connection', function(socket) {
   socket.on('InitState', function() {
     io.emit('InitState', initState);
   });
+  socket.on('ChoosePlayer', function(role) {
+    socket.emit('ChoosePlayer', role);
+  });
 });
 
 http.listen(3000, function() {

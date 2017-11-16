@@ -6,7 +6,8 @@
     "extends": "standard",
     "globals": {
         "WebIM": true,
-        "io": true
+        "io": true,
+        "socket": true
     },
     "rules": {
         "indent": [1, 2],

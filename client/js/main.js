@@ -1,12 +1,20 @@
 // 引入socket全局变量
 const socket = io();
 let chessBoard = [];
-let me = true;
+let me;
 
 socket.on('ChessBoard', (syncState) => {
   chessBoard = syncState.chessBoard;
-  me = !syncState.me;
   syncChessBoard(chessBoard);
+});
+
+socket.on('ChoosePlayer', role => {
+  if (role === 'black') {
+    me = true;
+  }
+  if (role === 'white') {
+    me = false;
+  }
 });
 // 造棋盘
 const chess = document.getElementById('chess');
@@ -44,7 +52,7 @@ const drawChessBoard = function() {
   });
 };
 drawChessBoard();
-// syncChessBoard(chessBoard);
+
 // 画棋子
 const oneStep = function (i, j, me) {
   context.beginPath();
@@ -71,11 +79,9 @@ chess.onclick = function (e) {
     oneStep(i, j, me);
     chessBoard[i][j] = me ? 1 : 2;
     const syncState = {
-      chessBoard: chessBoard,
-      me: me
+      chessBoard: chessBoard
     };
     socket.emit('ChessBoard', syncState);
-    me = !me;
   } else {
     alert('这里不能下...');
   }
