@@ -2,22 +2,29 @@
 const socket = io();
 let chessBoard = [];
 let me = true;
-for (let i = 0;i < 15;i++) {
-  chessBoard[i] = [];
-  for (let j = 0;j < 15;j++) {
-    chessBoard[i][j] = 0;
-  }
-}
+
 socket.on('ChessBoard', (syncState) => {
   chessBoard = syncState.chessBoard;
   me = !syncState.me;
-  console.log(chessBoard);
   syncChessBoard(chessBoard);
 });
 // 造棋盘
 const chess = document.getElementById('chess');
 const context = chess.getContext('2d');
 context.strokeStyle = '#bfbfbf';
+
+const syncChessBoard = function(chessBoard) {
+  for (let i = 0;i < 15;i++) {
+    for (let j = 0;j < 15;j++) {
+      if (chessBoard[i][j] === 1) {
+        oneStep(i, j, true);
+      }
+      if (chessBoard[i][j] === 2) {
+        oneStep(i, j, false);
+      }
+    }
+  }
+};
 
 // 画棋盘
 const drawChessBoard = function() {
@@ -29,15 +36,15 @@ const drawChessBoard = function() {
     context.lineTo(435, 15 + i * 30);
     context.stroke();
   }
-  socket.on('initChessBoard', initState => {
-    if (initState) {
-      chessBoard = initState.chessBoard;
-      me = initState.me;
-    }
+  socket.emit('InitState');
+  socket.on('InitState', initState => {
+    chessBoard = initState.chessBoard;
+    me = initState.me;
+    syncChessBoard(chessBoard);
   });
 };
 drawChessBoard();
-
+// syncChessBoard(chessBoard);
 // 画棋子
 const oneStep = function (i, j, me) {
   context.beginPath();
@@ -53,19 +60,6 @@ const oneStep = function (i, j, me) {
   }
   context.fillStyle = gradient;
   context.fill();// 填充
-};
-
-const syncChessBoard = function(chessBoard) {
-  for (let i = 0;i < 15;i++) {
-    for (let j = 0;j < 15;j++) {
-      if (chessBoard[i][j] === 1) {
-        oneStep(i, j, true);
-      }
-      if (chessBoard[i][j] === 2) {
-        oneStep(i, j, false);
-      }
-    }
-  }
 };
 // 下棋
 chess.onclick = function (e) {
