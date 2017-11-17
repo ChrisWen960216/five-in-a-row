@@ -4,11 +4,14 @@ const wait = document.getElementById('wait');
 let chessBoard = [];
 let me;
 
+// 同步棋盘
 socket.on('ChessBoard', (syncState) => {
   chessBoard = syncState.chessBoard;
   syncChessBoard(chessBoard);
+  wait.style.display = 'none';
 });
 
+// 监听选择角色
 socket.on('ChoosePlayer', role => {
   if (role === 'black') {
     me = true;
@@ -17,6 +20,7 @@ socket.on('ChoosePlayer', role => {
     me = false;
   }
 });
+
 // 造棋盘
 const chess = document.getElementById('chess');
 const context = chess.getContext('2d');

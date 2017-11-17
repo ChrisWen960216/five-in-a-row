@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$/Five-In-a-Row/UI AI/JS/script.js" libraries="{WebGL}" />
-    <file url="file://$PROJECT_DIR$/server/index.js" libraries="{WebGL}" />
+    <file url="file://$PROJECT_DIR$" libraries="{five-in-a-row/node_modules}" />
+    <file url="PROJECT" libraries="{five-in-a-row/node_modules}" />
     <includedPredefinedLibrary name="Node.js Core" />
+    <includedPredefinedLibrary name="WebGL" />
   </component>
 </project>

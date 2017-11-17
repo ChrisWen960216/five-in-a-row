@@ -15,16 +15,21 @@ app.get('/', function(req, res) {
 io.on('connection', function(socket) {
   socket.on('ChessBoard', function(syncState) {
     initState = syncState;
-    io.emit('ChessBoard', initState);
+    socket.broadcast.emit('ChessBoard', initState);
   });
   socket.on('InitState', function() {
     io.emit('InitState', initState);
   });
   socket.on('ChoosePlayer', function(role) {
+    const roles = {
+      role: role,
+      id: socket.id
+    };
+    console.log(roles);
     socket.emit('ChoosePlayer', role);
   });
 });
 
-http.listen(3000, function() {
-  console.log('listening on *:3000');
+http.listen(8080, function() {
+  console.log('listening on *:8080');
 });

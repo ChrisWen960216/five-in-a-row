@@ -1,3 +1,8 @@
-socket.on('ChoosePlayer', role => {
-  console.log('前端收到，选择了:', role);
-});
+// socket.on('ChoosePlayer', role => {
+//   if (role === 'black') {
+//     me = true;
+//   }
+//   if (role === 'white') {
+//     me = false;
+//   }
+// });
