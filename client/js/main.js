@@ -1,14 +1,15 @@
 // 引入socket全局变量
 const socket = io();
-const wait = document.getElementById('wait');
+// const wait = document.getElementById('wait');
 let chessBoard = [];
 let me;
 
 // 同步棋盘
 socket.on('ChessBoard', (syncState) => {
+  console.log(syncState);
   chessBoard = syncState.chessBoard;
   syncChessBoard(chessBoard);
-  wait.style.display = 'none';
+  // wait.style.display = 'none';
 });
 
 // 监听选择角色
@@ -27,6 +28,7 @@ const context = chess.getContext('2d');
 context.strokeStyle = '#bfbfbf';
 
 const syncChessBoard = function(chessBoard) {
+  console.log(chessBoard);
   for (let i = 0;i < 15;i++) {
     for (let j = 0;j < 15;j++) {
       if (chessBoard[i][j] === 1) {
@@ -51,6 +53,7 @@ const drawChessBoard = function() {
   }
   socket.emit('InitState');
   socket.on('InitState', initState => {
+    console.log(initState);
     chessBoard = initState.chessBoard;
     me = initState.me;
     syncChessBoard(chessBoard);
@@ -84,10 +87,11 @@ const play = function (e) {
     oneStep(i, j, me);
     if (me === 'black') { chessBoard[i][j] = 1; } else if (me === 'white') { chessBoard[i][j] = 2; }
     const syncState = {
-      chessBoard: chessBoard
+      chessBoard: chessBoard,
+      me: me
     };
     socket.emit('ChessBoard', syncState);
-    wait.style.display = 'block';
+    // wait.style.display = 'block';
   } else {
     alert('这里不能下...');
   }

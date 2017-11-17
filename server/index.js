@@ -9,6 +9,7 @@ const player = {
   black: null
 };
 let initState = initStateFunction();
+let playerList;
 
 app.use(express.static(path.join(__dirname, '../client')));
 
@@ -17,10 +18,6 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-  socket.on('ChessBoard', function(syncState) {
-    initState = syncState;
-    socket.broadcast.emit('ChessBoard', initState);
-  });
   socket.on('InitState', function() {
     io.emit('InitState', initState);
   });
@@ -30,8 +27,15 @@ io.on('connection', function(socket) {
       socket.emit('ChoosePlayer', role);
     }
   });
+  socket.on('ChessBoard', function(syncState) {
+    initState = syncState;
+    if (playerList !== syncState.me) {
+      playerList = syncState.me;
+      socket.broadcast.emit('ChessBoard', initState);
+    }
+  });
   socket.on('disconnect', function() {
-    for (let v in player) {
+    for (const v in player) {
       if (player[v] === socket.id) {
         player[v] = null;
         const message = {
