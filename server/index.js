@@ -4,6 +4,10 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
 const initStateFunction = require('./config');
+const player = {
+  white: null,
+  black: null
+};
 let initState = initStateFunction();
 
 app.use(express.static(path.join(__dirname, '../client')));
@@ -21,12 +25,22 @@ io.on('connection', function(socket) {
     io.emit('InitState', initState);
   });
   socket.on('ChoosePlayer', function(role) {
-    const roles = {
-      role: role,
-      id: socket.id
-    };
-    console.log(roles);
-    socket.emit('ChoosePlayer', role);
+    if (player[role] === null) {
+      player[role] = socket.id;
+      socket.emit('ChoosePlayer', role);
+    }
+  });
+  socket.on('disconnect', function() {
+    for (let v in player) {
+      if (player[v] === socket.id) {
+        player[v] = null;
+        const message = {
+          side: player[v],
+          player: socket.id
+        };
+        socket.emit('PlayerQuit', message);
+      }
+    }
   });
 });
 

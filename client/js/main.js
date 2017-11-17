@@ -14,10 +14,10 @@ socket.on('ChessBoard', (syncState) => {
 // 监听选择角色
 socket.on('ChoosePlayer', role => {
   if (role === 'black') {
-    me = true;
+    me = 'black';
   }
   if (role === 'white') {
-    me = false;
+    me = 'white';
   }
 });
 
@@ -30,10 +30,10 @@ const syncChessBoard = function(chessBoard) {
   for (let i = 0;i < 15;i++) {
     for (let j = 0;j < 15;j++) {
       if (chessBoard[i][j] === 1) {
-        oneStep(i, j, true);
+        oneStep(i, j, 'black');
       }
       if (chessBoard[i][j] === 2) {
-        oneStep(i, j, false);
+        oneStep(i, j, 'white');
       }
     }
   }
@@ -64,10 +64,10 @@ const oneStep = function (i, j, me) {
   context.arc(15 + i * 30, 15 + j * 30, 13, 0, 2 * Math.PI);
   context.closePath();
   const gradient = context.createRadialGradient(15 + i * 30 + 2, 15 + j * 30 - 2, 13, 15 + i * 30 + 2, 15 + j * 30 - 2, 0);
-  if (me) {
+  if (me === 'black') {
     gradient.addColorStop(0, '#0a0a0a');
     gradient.addColorStop(1, '#636766');
-  } else if (!me) {
+  } else if (me === 'white') {
     gradient.addColorStop(0, '#d1d1d1');
     gradient.addColorStop(1, '#f9f9f9');
   }
@@ -82,7 +82,7 @@ const play = function (e) {
   const j = Math.floor(y / 30);
   if (chessBoard[i][j] === 0) {
     oneStep(i, j, me);
-    chessBoard[i][j] = me ? 1 : 2;
+    if (me === 'black') { chessBoard[i][j] = 1; } else if (me === 'white') { chessBoard[i][j] = 2; }
     const syncState = {
       chessBoard: chessBoard
     };
