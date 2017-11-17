@@ -14,7 +14,8 @@ function initState() {
   }
   const initState = {
     chessBoard: chessBoard,
-    me: true
+    me: null,
+    playerList: 'white'
   };
   return initState;
 }

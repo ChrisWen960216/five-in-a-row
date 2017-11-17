@@ -9,7 +9,6 @@ const player = {
   black: null
 };
 let initState = initStateFunction();
-let playerList;
 
 app.use(express.static(path.join(__dirname, '../client')));
 
@@ -19,6 +18,10 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
   socket.on('InitState', function() {
+    if (player.white !== null && player.black !== null) {
+      initState.watcher = true;
+      console.log('这个是观战者');
+    }
     io.emit('InitState', initState);
   });
   socket.on('ChoosePlayer', function(role) {
@@ -28,10 +31,14 @@ io.on('connection', function(socket) {
     }
   });
   socket.on('ChessBoard', function(syncState) {
-    initState = syncState;
-    if (playerList !== syncState.me) {
-      playerList = syncState.me;
-      socket.broadcast.emit('ChessBoard', initState);
+    if (syncState.me) {
+      initState = syncState;
+      console.log(initState);
+      if (initState.playerList !== syncState.me) {
+        initState.playerList = syncState.me;
+        // console.log('emitState', initState);
+        socket.broadcast.emit('ChessBoard', initState);
+      }
     }
   });
   socket.on('disconnect', function() {
