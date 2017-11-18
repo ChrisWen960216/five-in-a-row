@@ -27,16 +27,19 @@ io.on('connection', function(socket) {
   socket.on('ChoosePlayer', function(role) {
     if (player[role] === null) {
       player[role] = socket.id;
-      socket.emit('ChoosePlayer', role);
+      const roleMsg = {
+        role: role,
+        id: socket.id
+      };
+      console.log(roleMsg);
+      socket.emit('ChoosePlayer', roleMsg);
     }
   });
   socket.on('ChessBoard', function(syncState) {
     if (syncState.me) {
       initState = syncState;
-      console.log(initState);
       if (initState.playerList !== syncState.me) {
         initState.playerList = syncState.me;
-        // console.log('emitState', initState);
         socket.broadcast.emit('ChessBoard', initState);
       }
     }

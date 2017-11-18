@@ -1,9 +1,7 @@
 // 引入socket全局变量
 const socket = io();
-// const wait = document.getElementById('wait');
 let chessBoard = [];
-let me;
-let playerList;
+let me, id, playerList, watcher = false;
 
 // 同步棋盘
 socket.on('ChessBoard', (syncState) => {
@@ -11,23 +9,29 @@ socket.on('ChessBoard', (syncState) => {
   if (!syncState.watcher) {
     playerList = syncState.playerList;
     chessBoard = syncState.chessBoard;
-  }
-  if (syncState.me === 'black') {
-    me = 'white';
-  } else if (syncState.me === 'white') {
-    me = 'black';
+    if (syncState.me === 'black') {
+      me = 'white';
+    } else if (syncState.me === 'white') {
+      me = 'black';
+    }
+  } else {
+    watcher = true;
   }
   syncChessBoard(chessBoard);
   // wait.style.display = 'none';
 });
 
 // 监听选择角色
-socket.on('ChoosePlayer', role => {
-  if (role === 'black') {
+socket.on('ChoosePlayer', roleMsg => {
+  if (roleMsg.role === 'black') {
     me = 'black';
+    id = roleMsg.id;
+    // console.log(id, me);
   }
-  if (role === 'white') {
+  if (roleMsg.role === 'white') {
     me = 'white';
+    id = roleMsg.id;
+    // console.log(id, me);
   }
 });
 
@@ -38,6 +42,7 @@ context.strokeStyle = '#bfbfbf';
 
 const syncChessBoard = function(chessBoard) {
   console.log('同步棋盘', chessBoard, '玩家', me, '列表', playerList);
+  console.log('watcher', watcher);
   for (let i = 0;i < 15;i++) {
     for (let j = 0;j < 15;j++) {
       if (chessBoard[i][j] === 1) {
@@ -90,29 +95,30 @@ const oneStep = function (i, j, me) {
 };
 // 下棋
 const play = function (e) {
-  console.log(`现在玩家${me}之前下的${playerList}`);
-  if (playerList !== me && me) {
-    const x = e.offsetX;
-    const y = e.offsetY;
-    const i = Math.floor(x / 30);
-    const j = Math.floor(y / 30);
-    if (chessBoard[i][j] === 0) {
-      oneStep(i, j, me);
-      if (me === 'black') {
-        chessBoard[i][j] = 1;
-      } else if (me === 'white') {
-        chessBoard[i][j] = 2;
+  console.log(`现在玩家${me},之前下的${playerList}`);
+  if(me && id) {
+    if (playerList !== me && me) {
+      const x = e.offsetX;
+      const y = e.offsetY;
+      const i = Math.floor(x / 30);
+      const j = Math.floor(y / 30);
+      if (chessBoard[i][j] === 0) {
+        oneStep(i, j, me);
+        if (me === 'black') {
+          chessBoard[i][j] = 1;
+        } else if (me === 'white') {
+          chessBoard[i][j] = 2;
+        }
+        const syncState = {
+          chessBoard: chessBoard,
+          me: me,
+          playerList: playerList
+        };
+        me = null;
+        socket.emit('ChessBoard', syncState);
+      } else {
+        alert('这里不能下...');
       }
-      const syncState = {
-        chessBoard: chessBoard,
-        me: me,
-        playerList: playerList
-      };
-      me = null;
-      console.log('下完之后', syncState, `现在玩家${me}`);
-      socket.emit('ChessBoard', syncState);
-    } else {
-      alert('这里不能下...');
     }
   }
 };
